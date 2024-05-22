@@ -1,0 +1,18 @@
+{
+  "plugins": [],
+  "projects": [
+    "63c6b2e150056e048a74788a"
+  ],
+  "components": [
+    {
+      "path": "app\\src\\main\\res\\drawable\\ic_launcher_background.xml",
+      "zeplinIds": [
+        "63ca721cdc19d02e50567898",
+        "63ca72265c447b2fc99992d8",
+        "63ca72078e71692e02a7dc18",
+        "63ca72065ca2c52f2ecfeaba",
+        "63ca7206b57cb22ec599ea5c"
+      ]
+    }
+  ]
+}
