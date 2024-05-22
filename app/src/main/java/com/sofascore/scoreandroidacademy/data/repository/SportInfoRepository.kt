@@ -38,7 +38,7 @@ class SportInfoRepository(application: Application) {
         )
 }
 
-//todo
+//todo test
 class MatchRepository(application: Application) {
     /*private val api = Network.getInstance()
     private val matchDao = SofascoreDatabase.getInstance(application).matchDao()
