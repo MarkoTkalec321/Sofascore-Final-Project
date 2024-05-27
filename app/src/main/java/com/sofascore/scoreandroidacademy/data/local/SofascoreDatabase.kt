@@ -13,7 +13,7 @@ import com.sofascore.scoreandroidacademy.data.local.entity.TeamEntity
 import com.sofascore.scoreandroidacademy.data.local.entity.SportEntity
 import com.sofascore.scoreandroidacademy.util.Converters
 
-@Database(entities = [MatchEntity::class, TeamEntity::class, SportEntity::class], version = 1)
+@Database(entities = [MatchEntity::class, TeamEntity::class, SportEntity::class], version = 12)
 @TypeConverters(Converters::class)
 abstract class SofascoreDatabase : RoomDatabase() {
     abstract fun matchDao(): MatchDao
@@ -28,7 +28,7 @@ abstract class SofascoreDatabase : RoomDatabase() {
 
         fun getInstance(context: Context): SofascoreDatabase {
 
-            synchronized(this) {
+            //synchronized(this) {
                 var instance = INSTANCE
 
                 if(instance == null) {
@@ -41,6 +41,7 @@ abstract class SofascoreDatabase : RoomDatabase() {
                     INSTANCE = instance
                 }
 
+                //ako nesto zeznem u bazi, odkomentiram ovo i zakomentiram ovo gore i promijenim verziju za +1
                 /*if(instance == null) {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
@@ -53,7 +54,7 @@ abstract class SofascoreDatabase : RoomDatabase() {
                 }*/
 
                 return instance
-            }
+            //}
         }
     }
 

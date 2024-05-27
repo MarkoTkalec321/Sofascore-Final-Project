@@ -23,17 +23,22 @@ fun getDatesRange(): List<Calendar> {
 
     dates.add(calendar.clone() as Calendar)
 
-    repeat(3) {
+    repeat(8) {
         calendar.add(Calendar.DAY_OF_YEAR, -1)
         dates.add(0, calendar.clone() as Calendar)
     }
 
-    calendar.add(Calendar.DAY_OF_YEAR, 3)
+    calendar.add(Calendar.DAY_OF_YEAR, 8)
 
-    repeat(3) {
+    repeat(8) {
         calendar.add(Calendar.DAY_OF_YEAR, 1)
         dates.add(calendar.clone() as Calendar)
     }
 
     return dates
+}
+
+fun getCurrentDate(): String {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    return dateFormat.format(Calendar.getInstance().time)
 }

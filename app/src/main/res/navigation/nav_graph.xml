@@ -10,7 +10,32 @@
         android:name="com.sofascore.scoreandroidacademy.ui.MainListPageFragment"
         android:label="@string/main_list_page_fragment"
         tools:layout="@layout/fragment_main_list_page">
+
+        <action
+            android:id="@+id/action_MainListPageFragment_to_TournamentDetailsPageFragment"
+            app:destination="@+id/TournamentDetailsPageFragment" />
+        <action
+            android:id="@+id/action_MainListPageFragment_to_EventDetailsPageFragment"
+            app:destination="@+id/EventDetailsPageFragment" />
+
     </fragment>
+
+    <fragment
+        android:id="@+id/TournamentDetailsPageFragment"
+        android:name="com.sofascore.scoreandroidacademy.ui.TournamentDetailsPageFragment"
+        android:label="TournamentDetailsPageFragment"
+        tools:layout="@layout/fragment_tournament_details_page">
+    </fragment>
+
+    <fragment
+        android:id="@+id/EventDetailsPageFragment"
+        android:name="com.sofascore.scoreandroidacademy.ui.EventDetailsPageFragment"
+        android:label="EventDetailsPageFragment"
+        tools:layout="@layout/fragment_event_details_page">
+    </fragment>
+
+
+
 
 
 

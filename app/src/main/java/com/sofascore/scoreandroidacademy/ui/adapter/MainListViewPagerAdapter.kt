@@ -22,5 +22,10 @@ class MainListViewPagerAdapter(
 
     override fun createFragment(position: Int): Fragment = fragments[position]
 
-    fun getPageTitle(position: Int): String = titles[position]
+    fun getPageTitle(position: Int): String {
+        if (position < 0 || position >= titles.size) {
+            throw IndexOutOfBoundsException("Position is out of bounds for titles list.")
+        }
+        return titles[position]
+    }
 }

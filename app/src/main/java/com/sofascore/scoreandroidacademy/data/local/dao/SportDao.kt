@@ -16,4 +16,7 @@ interface SportDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSportList(sport: List<SportEntity>)
 
+    @Query("DELETE FROM sports")
+    suspend fun deleteAllFromSportsTable()
+
 }

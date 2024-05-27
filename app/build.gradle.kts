@@ -71,4 +71,6 @@ dependencies {
 
     kapt(libs.room.compiler)
     //ksp(libs.room.compiler) //ovo ne radi
+
+    implementation(libs.coil)
 }

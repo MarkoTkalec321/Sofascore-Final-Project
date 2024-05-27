@@ -4,49 +4,43 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.sofascore.scoreandroidacademy.data.models.Country
-import com.sofascore.scoreandroidacademy.data.models.Score
-import com.sofascore.scoreandroidacademy.data.models.Tournament
+import com.sofascore.scoreandroidacademy.data.models.CountryResponse
+import com.sofascore.scoreandroidacademy.data.models.ScoreResponse
+import com.sofascore.scoreandroidacademy.data.models.TeamResponse
+import com.sofascore.scoreandroidacademy.data.models.TournamentResponse
+import java.io.Serializable
 
 @Entity(tableName = "matches",
-    foreignKeys = [
-        ForeignKey(
-            entity = TeamEntity::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("homeTeamId"),
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = TeamEntity::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("awayTeamId"),
-            onDelete = ForeignKey.CASCADE
-        )
-    ]
+
 )
 data class MatchEntity(
     @PrimaryKey
     val id: Int,
     val slug: String,
 
-    val homeTeamId: Int,
-    val awayTeamId: Int,
+    @Embedded(prefix = "homeTeam_")
+    val homeTeam: TeamResponse,
+
+    @Embedded(prefix = "awayTeam_")
+    val awayTeam: TeamResponse,
 
     @Embedded(prefix = "tournament_")
-    val tournament: Tournament,
+    val tournament: TournamentResponse,
 
     val status: String,
     val startDate: String,
 
     @Embedded(prefix = "home_")
-    val homeScore: Score,
+    val homeScore: ScoreResponse,
 
     @Embedded(prefix = "away_")
-    val awayScore: Score,
+    val awayScore: ScoreResponse,
 
-    val winnerCode: String,
-    val round: Int
-)
+    val winnerCode: String?,
+    val round: Int,
+    val date: String,
+    val sportName: String
+) : Serializable
 
 @Entity(tableName = "teams")
 data class TeamEntity(
@@ -54,7 +48,7 @@ data class TeamEntity(
     val id: Int,
     val name: String,
     @Embedded(prefix = "country_")
-    val country: Country
+    val country: CountryResponse
 )
 
 @Entity(tableName = "sports")
