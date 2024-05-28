@@ -7,32 +7,36 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.sofascore.scoreandroidacademy.R
 import com.sofascore.scoreandroidacademy.data.local.entity.MatchEntity
+import com.sofascore.scoreandroidacademy.data.local.entity.TournamentEntity
 import com.sofascore.scoreandroidacademy.data.models.MatchResponse
 import com.sofascore.scoreandroidacademy.data.models.TournamentResponse
 import com.sofascore.scoreandroidacademy.databinding.LayoutMatchBinding
 import com.sofascore.scoreandroidacademy.databinding.LayoutTournamentBinding
-import com.sofascore.scoreandroidacademy.util.TournamentMatches
-import com.sofascore.scoreandroidacademy.util.TournamentMatches.Companion.LayoutOne
-import com.sofascore.scoreandroidacademy.util.TournamentMatches.Companion.LayoutTwo
+import com.sofascore.scoreandroidacademy.util.IconConverter.Companion.loadImageFromByteArray
+import com.sofascore.scoreandroidacademy.util.TournamentViewItem
+import com.sofascore.scoreandroidacademy.util.ViewType
+
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
 class SportAdapter(
-    private var tournamentMatches: List<TournamentMatches>,
-    private val onTournamentClick: (TournamentResponse) -> Unit,
+    private val onTournamentClick: (TournamentEntity) -> Unit,
     private val onMatchClick: (MatchEntity) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        private val tournamentMatchesList: MutableList<TournamentMatches> = mutableListOf()
+        private val items: MutableList<TournamentViewItem> = mutableListOf()
 
-    inner class LayoutTournamentViewHolder(private val binding: LayoutTournamentBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(tournament: TournamentResponse) {
+    inner class TournamentViewHolder(private val binding: LayoutTournamentBinding): RecyclerView.ViewHolder(binding.root) {
+        fun bind(tournament: TournamentEntity) {
             itemView.setOnClickListener {
                 onTournamentClick(tournament)
             }
+
+            binding.tournamentLogo.loadImageFromByteArray(tournament.tournamentLogo)
             binding.countryName.text = tournament.country.name
             binding.countryName.setTextColor(ContextCompat.getColor(binding.root.context, R.color.on_surface_on_surface_lv_1))
             binding.tournamentName.text = tournament.name
@@ -41,7 +45,7 @@ class SportAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    inner class LayoutMatchViewHolder(private val binding: LayoutMatchBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MatchViewHolder(private val binding: LayoutMatchBinding) : RecyclerView.ViewHolder(binding.root) {
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault())
         private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
@@ -64,6 +68,8 @@ class SportAdapter(
                 "inprogress" -> handleInProgressMatch(match)
             }
 
+            binding.homeTeamLogo.loadImageFromByteArray(match.homeTeam.teamLogo)
+            binding.awayTeamLogo.loadImageFromByteArray(match.awayTeam.teamLogo)
             binding.homeTeamName.text = match.homeTeam.name
             binding.homeScore.text = match.homeScore.total?.toString() ?: ""
             binding.awayTeamName.text = match.awayTeam.name
@@ -111,6 +117,7 @@ class SportAdapter(
             binding.homeScore.setTextColor(liveColor)
             binding.awayScore.setTextColor(liveColor)
         }
+
         private fun setTextColorForTeams(winnerCode: String?) {
             when (winnerCode) {
                 "home" -> {
@@ -127,62 +134,43 @@ class SportAdapter(
 
     }
 
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            LayoutOne -> {
-                val bindingOne = LayoutTournamentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                LayoutTournamentViewHolder(bindingOne)
-            }
-            LayoutTwo -> {
-                val bindingTwo = LayoutMatchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                LayoutMatchViewHolder(bindingTwo)
-            }
+            ViewType.LayoutOne -> TournamentViewHolder(LayoutTournamentBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            ViewType.LayoutTwo -> MatchViewHolder(LayoutMatchBinding.inflate(LayoutInflater.from(parent.context), parent, false))
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (tournamentMatches[position].viewType) {
-            0 -> LayoutOne
-            1 -> LayoutTwo
-            else -> -1
+        return when (items[position]) {
+            is TournamentViewItem.TournamentData -> ViewType.LayoutOne
+            is TournamentViewItem.MatchData -> ViewType.LayoutTwo
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val viewType = getItemViewType(position)
-        when (viewType) {
-            LayoutOne -> {
-                val layoutOneViewHolder = holder as LayoutTournamentViewHolder
-                val item = tournamentMatches[position]
-                item.tournament?.let { layoutOneViewHolder.bind(it)}
-            }
-            LayoutTwo -> {
-                val layoutTwoViewHolder = holder as LayoutMatchViewHolder
-                val item = tournamentMatches[position]
-                item.match?.let { layoutTwoViewHolder.bind(it) }
-            }
-            else -> return
+        when (val item = items[position]) {
+            is TournamentViewItem.TournamentData -> (holder as TournamentViewHolder).bind(item.tournament)
+            is TournamentViewItem.MatchData -> (holder as MatchViewHolder).bind(item.match)
         }
     }
 
     override fun getItemCount(): Int {
-        return tournamentMatches.size
+        return items.size
     }
 
-    fun updateItems(newItems: MutableList<TournamentMatches>) {
-        val diffCallback = TournamentMatchesDiffCallback(tournamentMatches, newItems)
+    fun updateItems(newItems: MutableList<TournamentViewItem>) {
+        val diffCallback = TournamentMatchesDiffCallback(items, newItems)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
-        tournamentMatchesList.clear()
-        tournamentMatchesList.addAll(newItems)
+        items.clear()
+        items.addAll(newItems)
         diffResult.dispatchUpdatesTo(this)
     }
 
     class TournamentMatchesDiffCallback(
-        private val oldList: List<TournamentMatches>,
-        private val newList: List<TournamentMatches>
+        private val oldList: List<TournamentViewItem>,
+        private val newList: List<TournamentViewItem>
     ) : DiffUtil.Callback() {
 
         override fun getOldListSize() = oldList.size

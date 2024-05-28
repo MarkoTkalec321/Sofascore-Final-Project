@@ -34,11 +34,11 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     private val _datesList = MutableLiveData<List<Calendar>>()
     val datesList: LiveData<List<Calendar>> get() = _datesList
 
-    private val _selectedSportDate = MutableLiveData<Pair<String, String>>()
-    val selectedSportDate: LiveData<Pair<String, String>> = _selectedSportDate
+    /*private val _selectedSportDate = MutableLiveData<Pair<String, String>>()
+    val selectedSportDate: LiveData<Pair<String, String>> = _selectedSportDate*/
 
-    /*private val _selectedSportDate = MutableLiveData<Event<Pair<String, String>>>()
-    val selectedSportDate: LiveData<Event<Pair<String, String>>> = _selectedSportDate*/
+    private val _selectedSportDate = MutableLiveData<Event<Pair<String, String>>>()
+    val selectedSportDate: LiveData<Event<Pair<String, String>>> = _selectedSportDate
 
     private val sportInfoRepository = SportInfoRepository(application)
 
@@ -59,7 +59,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         }
     }*/
 
-    /*fun updateSportAndDate(sport: String, date: String) {
+    fun updateSportAndDate(sport: String, date: String) {
         val currentPair = _selectedSportDate.value?.peekContent()
         if (currentPair == null || currentPair.first != sport || currentPair.second != date) {
             _selectedSportDate.value = Event(Pair(sport, date))
@@ -67,39 +67,25 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         } else {
             Log.d("SharedViewModel", "No update needed for sport and date.")
         }
-    }*/
-
-    fun updateSportAndDate(sport: String, date: String) {
-        val current = _selectedSportDate.value
-        if (current == null || current.first != sport || current.second != date) {
-            Log.d("SharedViewModel", "Updating sport and date: $sport, $date")
-            _selectedSportDate.value = Pair(sport, date)
-        } else {
-            Log.d("SharedViewModel", "No update needed for sport and date.")
-        }
     }
 
     private fun fetchSports() {
         viewModelScope.launch {
-            sportInfoRepository.getSports().collect {resource ->
-
+            sportInfoRepository.getSports().collect { resource ->
                 when (resource) {
-
                     is Resource.Success -> {
-                        val sportsList = resource.data
-                        _sportsList.value = Result.Success(sportsList)
+                        _sportsList.value = Result.Success(resource.data)
                     }
                     is Resource.Failure -> {
-                        Log.d("Sports", "failure ${resource.error.message}")
-                        _sportsList.value = Result.Error(Throwable(resource.error.message))
+                        _sportsList.value = Result.Error(Exception(resource.error.message))
                     }
                     is Resource.Loading -> {
-                        Log.d("Loading", "Loading...")
                     }
                 }
             }
         }
     }
+
 
     private fun fetchDates() {
         _datesList.value = getDatesRange()

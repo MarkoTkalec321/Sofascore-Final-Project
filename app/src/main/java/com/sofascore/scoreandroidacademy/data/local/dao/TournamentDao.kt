@@ -5,21 +5,16 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.sofascore.scoreandroidacademy.data.local.entity.TeamEntity
+import com.sofascore.scoreandroidacademy.data.local.entity.TournamentEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface TeamDao {
+interface TournamentDao {
 
-    @Query("SELECT * FROM teams")
-    fun getAllTeams(): Flow<List<TeamEntity>>
-
-    @Query("SELECT * FROM teams WHERE id = :teamId")
-    suspend fun getTeamById(teamId: Int): TeamEntity?
+    @Query("SELECT * FROM tournaments WHERE id = :tournamentId")
+    suspend fun getTournamentById(tournamentId: Int): TournamentEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTeam(team: List<TeamEntity>)
+    fun insertTournament(tournament: List<TournamentEntity>)
 
-
-    @Query("DELETE FROM teams")
-    suspend fun deleteAllFromTeamsTable()
 }

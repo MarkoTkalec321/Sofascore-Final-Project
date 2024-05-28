@@ -29,14 +29,11 @@ import java.util.Locale
 class MainListPageFragment : Fragment() {
     private var _binding: FragmentMainListPageBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var sportViewPager: ViewPager2
     private lateinit var sportTabLayout: TabLayout
     private lateinit var dateTabLayout: TabLayout
 
-    private var isUserInteraction = true
-
-    //private lateinit var dateAdapter: DateAdapter
-    //private lateinit var recyclerView: RecyclerView
     private val sharedViewModel by activityViewModels<SharedViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,15 +49,15 @@ class MainListPageFragment : Fragment() {
         sportTabLayout = binding.tabLayout
         dateTabLayout = binding.dateTabLayout
 
-
         return binding.root
     }
 
     private fun setupObservers() {
+
         sharedViewModel.sportsList.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Result.Success -> {
-                    setupViewPagerAndTabs(result.data)
+                    setupSportViewPagerAndTabs(result.data)
                 }
                 is Result.Error -> Log.e("API Error", "Error fetching data: ${result.error.message}", result.error)
             }
@@ -70,7 +67,8 @@ class MainListPageFragment : Fragment() {
         }
     }
 
-    private fun setupViewPagerAndTabs(sportsList: List<SportEntity>) {
+    private fun setupSportViewPagerAndTabs(sportsList: List<SportEntity>) {
+
         val sportNames = sportsList.map { it.name }
 
         val adapter = MainListViewPagerAdapter(childFragmentManager, lifecycle)
@@ -81,57 +79,56 @@ class MainListPageFragment : Fragment() {
             adapter.addFragment(fragment, sportName)
         }
 
-        TabLayoutMediator(sportTabLayout, sportViewPager) { tab, position ->
-            context?.let {
-                val iconSize = IconConverter.dpToPx(it, 32)
-                val icon = when (sportNames[position]) {
-                    "Football" -> IconConverter.resizeIcon(it, R.drawable.icon, iconSize, iconSize)
-                    "Basketball" -> IconConverter.resizeIcon(it, R.drawable.icon_basketball, iconSize, iconSize)
-                    "American Football" -> IconConverter.resizeIcon(it, R.drawable.icon_american_football, iconSize, iconSize)
-                    else -> null
+        sportViewPager.post {
+            TabLayoutMediator(sportTabLayout, sportViewPager) { tab, position ->
+                context?.let {
+                    val iconSize = IconConverter.dpToPx(it, 32)
+                    val icons = listOf(
+                        R.drawable.icon,
+                        R.drawable.icon_basketball,
+                        R.drawable.icon_american_football
+                    )
+                    val icon = IconConverter.resizeIcon(it, icons[position], iconSize, iconSize)
+                    tab.icon = icon
+                    tab.text = sportNames[position]
                 }
-                tab.icon = icon
-                tab.text = when (sportNames[position]) {
-                    "American Football" -> "Am. Football"
-                    else -> sportNames[position]
-                }
-            }
-        }.attach()
+            }.attach()
 
-        sportViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-
-                if (isUserInteraction) {
-                    val currentSport = adapter.getPageTitle(position)
-                    val currentDate = getCurrentDate()
-                    switchToDateToday()
-
-                    Log.d("sportViewPager", "sportViewPager CLICKED????!?!?!?!?")
-                    //"2024-05-26"
-                    sharedViewModel.updateSportAndDate(currentSport, currentDate)
+            sportViewPager.post {
+                if (sportTabLayout.selectedTabPosition == -1 && sportTabLayout.tabCount > 0) {
+                    sportTabLayout.getTabAt(0)?.select()
                 }
             }
+        }
+
+        sportTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                val currentSport = (sportViewPager.adapter as MainListViewPagerAdapter).getPageTitle(tab.position)
+                Log.d("sportTabLayout", "Sport selected: $currentSport")
+
+                val currentDate = getCurrentDate()
+                switchToDateToday()
+                Log.d("sportViewPager", "sportViewPager CLICKED????!?!?!?!?")
+
+                //"2024-05-26"
+                //"Basketball"
+                //sharedViewModel.updateSportAndDate(currentSport, currentDate)
+                Log.d("sportViewPager", "Updating sport and date after page selected")
+                sharedViewModel.updateSportAndDate(currentSport, currentDate)
+
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
     }
+
     private fun switchToDateToday() {
         val dates = sharedViewModel.datesList.value ?: return
         val todayIndex = dates.indexOfFirst { isSameDay(it, Calendar.getInstance()) }
         if (todayIndex != -1) {
-            isUserInteraction = false
             dateTabLayout.getTabAt(todayIndex)?.select()
-            isUserInteraction = true
         }
     }
-
-
-    /*private fun switchToDateToday() {
-        val dates = sharedViewModel.datesList.value ?: return
-        val todayIndex = dates.indexOfFirst { isSameDay(it, Calendar.getInstance()) }
-        if (todayIndex != -1) {
-            dateTabLayout.selectTab(dateTabLayout.getTabAt(todayIndex))
-        }
-    }*/
 
     private fun setupDateTabs(dates: List<Calendar>) {
         dateTabLayout.removeAllTabs()
@@ -147,13 +144,17 @@ class MainListPageFragment : Fragment() {
 
         dateTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                if (isUserInteraction) {
-                    val selectedDate = DateFormat.format("yyyy-MM-dd", dates[tab.position]).toString()
-                    val currentSport = (sportViewPager.adapter as MainListViewPagerAdapter).getPageTitle(sportViewPager.currentItem)
+                //sportViewPager.post {
+                    val selectedDate =
+                        DateFormat.format("yyyy-MM-dd", dates[tab.position]).toString()
+                    val currentSport =
+                        (sportViewPager.adapter as MainListViewPagerAdapter).getPageTitle(
+                            sportViewPager.currentItem
+                        )
 
                     Log.d("dateTabLayout", "dateTabLayout CLICKED????!?!?!?!?")
                     sharedViewModel.updateSportAndDate(currentSport, selectedDate)
-                }
+                //}
             }
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}

@@ -27,21 +27,22 @@ class SportViewModel(application: Application) : AndroidViewModel(application) {
     val matchList: LiveData<Event<Result<List<MatchEntity>>>> = _matchList
 
 
+
     private val matchRepository  = MatchRepository(application)
 
     fun fetchMatchResponses(sportName: String, date: String) {
         viewModelScope.launch {
             matchRepository.getMatchesByDate(sportName, date)
-                .distinctUntilChanged()
+                //.distinctUntilChanged()
                 .collect { resource ->
                     when (resource) {
                         is Resource.Success -> {
 
                             val matchList123 = resource.data
-                            if (_matchList.value?.peekContent() != Result.Success(matchList123)) {
+                            //if (_matchList.value?.peekContent() != Result.Success(matchList123)) {
                                 _matchList.value = Event(Result.Success(matchList123))
-                                Log.d("matchList", "${matchList.value.toString()}")
-                            }
+                                Log.d("SportViewModel", "${matchList.value.toString()}")
+                            //}
                         }
                         is Resource.Failure -> {
                             _matchList.value = Event(Result.Error(Throwable(resource.error.message)))
