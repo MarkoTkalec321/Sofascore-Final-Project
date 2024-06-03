@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TournamentDao {
 
+    @Query("SELECT * FROM tournaments")
+    suspend fun getAllTournaments(): TournamentEntity
+
     @Query("SELECT * FROM tournaments WHERE id = :tournamentId")
     suspend fun getTournamentById(tournamentId: Int): TournamentEntity?
 

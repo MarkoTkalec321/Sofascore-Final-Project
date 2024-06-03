@@ -15,7 +15,7 @@ import com.sofascore.scoreandroidacademy.data.local.entity.SportEntity
 import com.sofascore.scoreandroidacademy.data.local.entity.TournamentEntity
 import com.sofascore.scoreandroidacademy.util.Converters
 
-@Database(entities = [MatchEntity::class, TeamEntity::class, SportEntity::class, TournamentEntity::class], version = 15)
+@Database(entities = [MatchEntity::class, TeamEntity::class, SportEntity::class, TournamentEntity::class], version = 17)
 @TypeConverters(Converters::class)
 abstract class SofascoreDatabase : RoomDatabase() {
     abstract fun matchDao(): MatchDao
@@ -34,7 +34,7 @@ abstract class SofascoreDatabase : RoomDatabase() {
             //synchronized(this) {
             var instance = INSTANCE
 
-            if (instance == null) {
+            /*if (instance == null) {
                 instance = Room.databaseBuilder(
                     context.applicationContext,
                     SofascoreDatabase::class.java,
@@ -42,11 +42,11 @@ abstract class SofascoreDatabase : RoomDatabase() {
                 ).build()
 
                 INSTANCE = instance
-            }
+            }*/
 
             //ako nesto zeznem u bazi, odkomentiram ovo i zakomentiram ovo gore i promijenim verziju za +1
 
-            /*if(instance == null) {
+            if(instance == null) {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         SofascoreDatabase::class.java,
@@ -55,7 +55,7 @@ abstract class SofascoreDatabase : RoomDatabase() {
                         .build()
 
                     INSTANCE = instance
-            }*/
+            }
 
             return instance
 

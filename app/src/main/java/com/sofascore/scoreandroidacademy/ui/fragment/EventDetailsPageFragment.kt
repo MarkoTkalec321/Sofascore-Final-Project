@@ -1,4 +1,4 @@
-package com.sofascore.scoreandroidacademy.ui
+package com.sofascore.scoreandroidacademy.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

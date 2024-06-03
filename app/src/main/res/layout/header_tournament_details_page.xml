@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_primary_default"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="16dp"
+    android:paddingStart="16dp"
+    android:paddingTop="72dp"
+    >
+
+    <View
+        android:id="@+id/square"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/rounded_sqare"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/tournament_logo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintBottom_toBottomOf="@id/square"
+        app:layout_constraintEnd_toEndOf="@id/square"
+        app:layout_constraintStart_toStartOf="@id/square"
+        app:layout_constraintTop_toTopOf="@id/square" />
+
+    <TextView
+        android:id="@+id/tournament_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Tournament"
+        android:textColor="@color/surface_surface_1"
+
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@id/square"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/country_logo"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:scaleType="centerCrop"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/country_name"
+        app:layout_constraintStart_toEndOf="@id/square"
+        app:layout_constraintTop_toBottomOf="@id/tournament_name" />
+
+    <TextView
+        android:id="@+id/country_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toEndOf="@id/country_logo"
+        app:layout_constraintTop_toBottomOf="@id/tournament_name"
+        android:text="Country"
+        android:textColor="@color/surface_surface_1"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

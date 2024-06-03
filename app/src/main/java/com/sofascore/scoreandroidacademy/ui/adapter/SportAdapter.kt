@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import coil.load
 import com.sofascore.scoreandroidacademy.R
 import com.sofascore.scoreandroidacademy.data.local.entity.MatchEntity
@@ -17,6 +18,7 @@ import com.sofascore.scoreandroidacademy.databinding.LayoutMatchBinding
 import com.sofascore.scoreandroidacademy.databinding.LayoutTournamentBinding
 import com.sofascore.scoreandroidacademy.util.IconConverter.Companion.loadImageFromByteArray
 import com.sofascore.scoreandroidacademy.util.TournamentViewItem
+
 import com.sofascore.scoreandroidacademy.util.ViewType
 
 import java.text.SimpleDateFormat

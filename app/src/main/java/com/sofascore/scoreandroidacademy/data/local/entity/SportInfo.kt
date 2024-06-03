@@ -46,8 +46,8 @@ data class MatchEntity(
 
     val winnerCode: String?,
     val round: Int,
-    val date: String,
-    val sportName: String
+    val date: String?,
+    val sportName: String?
 ) : Serializable
 
 @Entity(tableName = "teams")
@@ -91,7 +91,8 @@ data class TournamentEntity(
     val slug: String,
     val sport: SportResponse,
     val country: CountryResponse,
-    val tournamentLogo: ByteArray?
+    val tournamentLogo: ByteArray?,
+    val date: String?
 ) : Serializable
 {
     override fun equals(other: Any?): Boolean {
