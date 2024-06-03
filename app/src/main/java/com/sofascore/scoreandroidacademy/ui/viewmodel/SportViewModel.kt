@@ -1,32 +1,22 @@
-package com.sofascore.scoreandroidacademy.ui
+package com.sofascore.scoreandroidacademy.ui.viewmodel
 
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
 import com.sofascore.scoreandroidacademy.data.local.entity.MatchEntity
 import com.sofascore.scoreandroidacademy.data.remote.Result
 import com.sofascore.scoreandroidacademy.data.repository.MatchRepository
 import com.sofascore.scoreandroidacademy.data.repository.Resource
 import com.sofascore.scoreandroidacademy.util.Event
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.distinctUntilChangedBy
-import kotlinx.coroutines.flow.lastOrNull
 import kotlinx.coroutines.launch
 
 class SportViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _matchList = MutableLiveData<Event<Result<List<MatchEntity>>>>()
     val matchList: LiveData<Event<Result<List<MatchEntity>>>> = _matchList
-
-
 
     private val matchRepository  = MatchRepository(application)
 

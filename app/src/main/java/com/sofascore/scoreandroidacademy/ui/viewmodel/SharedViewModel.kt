@@ -1,4 +1,4 @@
-package com.sofascore.scoreandroidacademy.ui
+package com.sofascore.scoreandroidacademy.ui.viewmodel
 
 import android.app.Application
 import android.util.Log
@@ -17,6 +17,7 @@ import com.sofascore.scoreandroidacademy.data.remote.Result
 import com.sofascore.scoreandroidacademy.data.repository.MatchRepository
 import com.sofascore.scoreandroidacademy.data.repository.SportInfoRepository
 import com.sofascore.scoreandroidacademy.util.Event
+import com.sofascore.scoreandroidacademy.util.getCurrentDate
 import com.sofascore.scoreandroidacademy.util.getDatesRange
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,9 +28,16 @@ import java.util.Calendar
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val _selectedSport = MutableLiveData<Event<Result<String>>>()
+    val selectedSport: LiveData<Event<Result<String>>> = _selectedSport
+
+    private val _selectedDate = MutableLiveData<Event<Result<String>>>()
+    val selectedDate: LiveData<Event<Result<String>>> get() = _selectedDate
+
+
+
     private val _sportsList = MutableLiveData<Result<List<SportEntity>>>()
     val sportsList: LiveData<Result<List<SportEntity>>> = _sportsList
-
 
     private val _datesList = MutableLiveData<List<Calendar>>()
     val datesList: LiveData<List<Calendar>> get() = _datesList
@@ -56,6 +64,48 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             sportDao.deleteAllFromSportsTable()
             teamDao.deleteAllFromTeamsTable()
             matchDao.deleteAllFromMatchesTable()
+        }
+    }*/
+
+
+    private val _temporarySelectedSport = MutableLiveData<Event<Result<String>>>()
+    val temporarySelectedSport: LiveData<Event<Result<String>>> = _temporarySelectedSport
+    // private var temporarySelectedSport: String? = null
+
+    /*fun updateSport(sport: String) {
+        if (datesList.value == null) {  // Check if dates are already loaded
+
+            updateSportAndDate(sport, getCurrentDate())
+        } else {
+            _temporarySelectedSport.value = Event(Result.Success(sport))  // Store sport temporarily
+        }
+    }
+
+    fun updateDate(date: String) {
+        _temporarySelectedSport.let { sport ->
+            val sport123 = Event(Result.Success(sport))
+            Log.d("isus", "$sport")
+            updateSportAndDate(sport123.toString(), date)
+            //_temporarySelectedSport.value = null   // Clear after updating
+        }
+    }*/
+    /*fun updateSport(sport: String) {
+        val currentSport = _selectedSport.value?.peekContent().toString()
+        if (currentSport != sport) {
+            _selectedSport.value = Event(Result.Success(sport))
+            Log.d("SharedViewModel", "Updating sport: ${sport}")
+        } else {
+            Log.d("SharedViewModel", "No update needed for sport.")
+        }
+    }
+
+    fun updateDate(date: String) {
+        val currentDate = _selectedDate.value?.peekContent().toString()
+        if (currentDate != date) {
+            _selectedDate.value = Event(Result.Success(date))
+            Log.d("SharedViewModel", "Updating date: ${date}")
+        } else {
+            Log.d("SharedViewModel", "No update needed for date.")
         }
     }*/
 

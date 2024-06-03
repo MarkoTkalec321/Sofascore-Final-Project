@@ -1,10 +1,11 @@
-package com.sofascore.scoreandroidacademy.ui
+package com.sofascore.scoreandroidacademy.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -13,10 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sofascore.scoreandroidacademy.R
 import com.sofascore.scoreandroidacademy.data.local.entity.MatchEntity
 import com.sofascore.scoreandroidacademy.data.local.entity.TournamentEntity
-import com.sofascore.scoreandroidacademy.data.models.TournamentResponse
 import com.sofascore.scoreandroidacademy.databinding.FragmentSportBinding
 import com.sofascore.scoreandroidacademy.data.remote.Result
 import com.sofascore.scoreandroidacademy.ui.adapter.SportAdapter
+import com.sofascore.scoreandroidacademy.ui.viewmodel.SharedViewModel
+import com.sofascore.scoreandroidacademy.ui.viewmodel.SportViewModel
 import com.sofascore.scoreandroidacademy.util.TournamentViewItem
 import com.sofascore.scoreandroidacademy.util.ViewType
 import com.sofascore.scoreandroidacademy.util.getCurrentDate
@@ -98,6 +100,7 @@ class SportFragment: Fragment() {
 
                             tournamentMatchesMap.getOrPut(it.tournament) { mutableListOf() }.add(it)
                         }
+
                         tournamentMatchesMap.forEach { (tournament, matches) ->
                             matches.sortBy { match ->
                                 LocalDateTime.parse(match.startDate, DateTimeFormatter.ISO_DATE_TIME)
@@ -107,23 +110,15 @@ class SportFragment: Fragment() {
                         tournamentMatchesMap.forEach { (key, value) ->
                             if(value.isNotEmpty()) {
                                 //Log.d("key123", key.toString())
-                                tournamentMatches.add(TournamentViewItem.TournamentData(ViewType.LayoutOne, key))
+                                tournamentMatches.add(TournamentViewItem.TournamentData(key))
                                 value.forEach { matchEntity ->
                                     //Log.d("matchEntity", matchEntity.toString())
-                                    tournamentMatches.add(TournamentViewItem.MatchData(ViewType.LayoutTwo, matchEntity))
+                                    tournamentMatches.add(TournamentViewItem.MatchData(matchEntity))
                                 }
                             }
                         }
 
                         adapter.updateItems(tournamentMatches)
-
-                        // Log each tournament and its matches
-                        /*tournamentMatchesMap.forEach { (tournament, matches) ->
-                            val matchDetails = matches.joinToString(separator = "\n") { match ->
-                                "Match ID: ${match.id}, Slug: ${match.slug}, Start Date: ${match.startDate}"
-                            }
-                            Log.d("SportFragment", "Tournament: ${tournament.name}, Matches: \n$matchDetails")
-                        }*/
                     }
                     is Result.Error -> {
                         Log.d("SportFragment", "Error fetching matches: ${result.error.message}")
@@ -136,7 +131,7 @@ class SportFragment: Fragment() {
 
     private fun updateDateDisplay(date: String) {
         val currentDate = getCurrentDate()
-        binding.dateTextView.text = if (date == currentDate) {
+        binding.includedTextViewHeader.dateTextView.text = if (date == currentDate) {
             "Today"
         } else {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -148,14 +143,17 @@ class SportFragment: Fragment() {
 
     private fun updateMatchCountDisplay(count: Int) {
         val countText = if (count == 1) "$count Event" else "$count Events"
-        binding.eventCountTextView.text = countText
-
-        if (count == 0) {
-            binding.noMatchesTextView.visibility = View.VISIBLE
-            binding.eventCountTextView.visibility = View.GONE
-        } else {
-            binding.noMatchesTextView.visibility = View.GONE
-            binding.eventCountTextView.visibility = View.VISIBLE
+        with(binding) {
+            includedTextViewHeader.eventCountTextView.text = countText
+            includedTextViewHeader.eventCountTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.on_surface_on_surface_lv_1))
+            includedTextViewHeader.dateTextView.setTextColor(ContextCompat.getColor(requireContext(), R.color.on_surface_on_surface_lv_1))
+            if (count == 0) {
+                noMatchesTextView.visibility = View.VISIBLE
+                includedTextViewHeader.eventCountTextView.visibility = View.GONE
+            } else {
+               noMatchesTextView.visibility = View.GONE
+                includedTextViewHeader.eventCountTextView.visibility = View.VISIBLE
+            }
         }
     }
 
