@@ -24,6 +24,7 @@ class StandingsAdapter : RecyclerView.Adapter<StandingsAdapter.ViewHolder>() {
                 played.text = row.played.toString()
                 wins.text = row.wins.toString()
                 losses.text = row.losses.toString()
+                draws.text = row.draws.toString()
 
                 firstRow?.let {
                     difference.text = (it.scoresFor - row.scoresAgainst).toString()

@@ -3,6 +3,7 @@ package com.sofascore.scoreandroidacademy.data.repository
 import android.app.Application
 import android.util.Log
 import androidx.paging.PagingSource
+import com.google.gson.JsonSyntaxException
 import com.sofascore.scoreandroidacademy.data.local.SofascoreDatabase
 import com.sofascore.scoreandroidacademy.data.local.entity.MatchEntity
 import com.sofascore.scoreandroidacademy.data.local.entity.TeamEntity
@@ -294,6 +295,74 @@ class MatchRepository(application: Application) {
             }
         } catch (e: Exception) {
             PagingSource.LoadResult.Error(e)
+        }
+    }
+
+    suspend fun getEventDetailsByEventId(eventId: Int): MatchEntity {
+        val result = safeResponse { api.getEventDetailsByEventId(eventId) }
+        return when (result) {
+            is Result.Success -> {
+                val match = result.data
+                run {
+                    val homeLogo = getTeamLogoSafe(match.homeTeam.id)
+                    val awayLogo = getTeamLogoSafe(match.awayTeam.id)
+                    val tournamentLogo = getTeamLogoSafe(match.tournament.id)
+                    MatchEntity(
+                        id = match.id,
+                        slug = match.slug,
+                        homeTeam = TeamEntity(
+                            id = match.homeTeam.id,
+                            name = match.homeTeam.name,
+                            country = CountryResponse(
+                                id = match.homeTeam.country.id,
+                                name = match.homeTeam.country.name
+                            ),
+                            teamLogo = homeLogo
+                        ),
+                        awayTeam = TeamEntity(
+                            id = match.awayTeam.id,
+                            name = match.awayTeam.name,
+                            country = CountryResponse(
+                                id = match.awayTeam.country.id,
+                                name = match.awayTeam.country.name
+                            ),
+                            teamLogo = awayLogo
+                        ),
+                        tournament = TournamentEntity(
+                            id = match.tournament.id,
+                            name = match.tournament.name,
+                            slug = match.tournament.slug,
+                            sport = SportResponse(
+                                id = match.tournament.sport.id,
+                                name = match.tournament.sport.name,
+                                slug = match.tournament.sport.slug
+                            ),
+                            country = CountryResponse(
+                                id = match.tournament.country.id,
+                                name = match.tournament.country.name
+                            ),
+                            tournamentLogo = tournamentLogo,
+                            date = null
+                        ),
+                        status = match.status,
+                        startDate = match.startDate,
+                        homeScore = ScoreResponse(
+                            total = match.homeScore.total,
+                            period2 = match.homeScore.period2
+                        ),
+                        awayScore = ScoreResponse(
+                            total = match.awayScore.total,
+                            period2 = match.awayScore.period2
+                        ),
+                        winnerCode = match.winnerCode,
+                        round = match.round,
+                        date = null,
+                        sportName = null
+                    )
+                }
+            }
+
+            is Result.Error -> throw Exception("Error processing matches: ${result.error.message}")
         }
     }
 

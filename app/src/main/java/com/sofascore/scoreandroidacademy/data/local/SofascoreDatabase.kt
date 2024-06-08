@@ -15,7 +15,7 @@ import com.sofascore.scoreandroidacademy.data.local.entity.SportEntity
 import com.sofascore.scoreandroidacademy.data.local.entity.TournamentEntity
 import com.sofascore.scoreandroidacademy.util.Converters
 
-@Database(entities = [MatchEntity::class, TeamEntity::class, SportEntity::class, TournamentEntity::class], version = 17)
+@Database(entities = [MatchEntity::class, TeamEntity::class, SportEntity::class, TournamentEntity::class], version = 18)
 @TypeConverters(Converters::class)
 abstract class SofascoreDatabase : RoomDatabase() {
     abstract fun matchDao(): MatchDao

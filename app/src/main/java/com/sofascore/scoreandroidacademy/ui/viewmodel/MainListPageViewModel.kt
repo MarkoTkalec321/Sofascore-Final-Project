@@ -5,28 +5,17 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.viewModelScope
-import com.sofascore.scoreandroidacademy.data.local.SofascoreDatabase
-import com.sofascore.scoreandroidacademy.data.local.dao.MatchDao
-import com.sofascore.scoreandroidacademy.data.local.entity.MatchEntity
 import com.sofascore.scoreandroidacademy.data.local.entity.SportEntity
-import com.sofascore.scoreandroidacademy.data.models.SportResponse
 import com.sofascore.scoreandroidacademy.data.repository.Resource
 import com.sofascore.scoreandroidacademy.data.remote.Result
-import com.sofascore.scoreandroidacademy.data.repository.MatchRepository
 import com.sofascore.scoreandroidacademy.data.repository.SportInfoRepository
 import com.sofascore.scoreandroidacademy.util.Event
-import com.sofascore.scoreandroidacademy.util.getCurrentDate
 import com.sofascore.scoreandroidacademy.util.getDatesRange
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import com.sofascore.scoreandroidacademy.data.remote.Result as MyResult
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-class SharedViewModel(application: Application) : AndroidViewModel(application) {
+class MainListPageViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _selectedSport = MutableLiveData<Event<Result<String>>>()
     val selectedSport: LiveData<Event<Result<String>>> = _selectedSport

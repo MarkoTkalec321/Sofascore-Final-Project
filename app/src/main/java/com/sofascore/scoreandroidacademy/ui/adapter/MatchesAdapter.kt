@@ -18,8 +18,7 @@ import com.sofascore.scoreandroidacademy.util.ViewHolderFactory
 
 class MatchesAdapter(
     private val onMatchClick: (MatchEntity) -> Unit,
-    private val insideMatchesAdapter: Boolean = true,
-    private val logMatchDetails: (MatchEntity) -> Unit
+    private val insideMatchesAdapter: Boolean = true
 ) : PagingDataAdapter<RoundMatchesViewItem, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -37,7 +36,6 @@ class MatchesAdapter(
             is RoundMatchesViewItem.RoundData -> (holder as? RoundViewHolder)?.bind(item.round)
             is RoundMatchesViewItem.MatchData -> {
                 (holder as MatchViewHolder).bind(item.match, insideMatchesAdapter)
-                logMatchDetails(item.match)
             }
         }
     }

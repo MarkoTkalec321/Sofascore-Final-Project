@@ -3,6 +3,7 @@ package com.sofascore.scoreandroidacademy.ui.adapter
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -29,10 +30,10 @@ import java.util.TimeZone
 class SportAdapter(
     private val onTournamentClick: (TournamentEntity) -> Unit,
     private val onMatchClick: (MatchEntity) -> Unit) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<ViewHolder>() {
         private val items: MutableList<TournamentViewItem> = mutableListOf()
 
-    inner class TournamentViewHolder(private val binding: LayoutTournamentBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class TournamentViewHolder(private val binding: LayoutTournamentBinding): ViewHolder(binding.root) {
         fun bind(tournament: TournamentEntity) {
             itemView.setOnClickListener {
                 onTournamentClick(tournament)
@@ -47,7 +48,7 @@ class SportAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    inner class MatchViewHolder(private val binding: LayoutMatchBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MatchViewHolder(private val binding: LayoutMatchBinding) : ViewHolder(binding.root) {
         private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault())
         private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
@@ -63,19 +64,27 @@ class SportAdapter(
             }
 
             binding.startTime.text = formatStartTime(match.startDate)
-
-            when (match.status) {
-                "finished" -> handleFinishedMatch(match)
-                "notstarted" -> { binding.finishTime.text = "-"}
-                "inprogress" -> handleInProgressMatch(match)
-            }
-
             binding.homeTeamLogo.loadImageFromByteArray(match.homeTeam.teamLogo)
             binding.awayTeamLogo.loadImageFromByteArray(match.awayTeam.teamLogo)
             binding.homeTeamName.text = match.homeTeam.name
-            binding.homeScore.text = match.homeScore.total?.toString() ?: ""
             binding.awayTeamName.text = match.awayTeam.name
-            binding.awayScore.text = match.awayScore.total?.toString() ?: ""
+
+            if (match.status != "notstarted") {
+                binding.homeScore.visibility = View.VISIBLE
+                binding.awayScore.visibility = View.VISIBLE
+                binding.homeScore.text = match.homeScore.total.toString()
+                binding.awayScore.text = match.awayScore.total.toString()
+            } else {
+                binding.homeScore.visibility = View.INVISIBLE
+                binding.awayScore.visibility = View.INVISIBLE
+            }
+
+            when (match.status) {
+                "finished" -> handleFinishedMatch(match)
+                "notstarted" -> { binding.finishTime.text = "-" }
+                "inprogress" -> handleInProgressMatch(match)
+            }
+
         }
 
         private fun resetColors() {

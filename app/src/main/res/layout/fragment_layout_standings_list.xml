@@ -33,7 +33,7 @@
             android:gravity="end"
             android:textColor="@color/on_surface_on_surface_lv_2"
             android:paddingStart="24dp"
-            android:paddingEnd="72dp"
+            android:paddingEnd="80dp"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="DIFF"
+            android:text="D"
             android:textColor="@color/on_surface_on_surface_lv_2"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
@@ -80,7 +80,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Str"
+            android:text="DIFF"
             android:textColor="@color/on_surface_on_surface_lv_2"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"

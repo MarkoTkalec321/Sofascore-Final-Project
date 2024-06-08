@@ -94,9 +94,13 @@ data class TeamResponse(
 ): Serializable
 
 data class ScoreResponse(
-    val total: Int? = null,
-    val period2: Int? = null
-): Serializable
+    val total: Int,
+    val period1: Int? = null,
+    val period2: Int? = null,
+    val period3: Int? = null,
+    val period4: Int? = null,
+    val overtime: Int? = null
+) : Serializable
 
 data class SortedStandingsRowResponse(
     val id: Int,
@@ -116,3 +120,27 @@ data class StandingsMatchResponse(
     val type: String,
     val sortedStandingsRows: List<SortedStandingsRowResponse>
 ): Serializable
+
+data class EventDetailsResponse(
+    val player: PlayerResponse?,
+    val teamSide: String? = null,
+    val color: String? = null,
+    val id: Int,
+    val time: Int,
+    val type: String,
+    val scoringTeam: String? = null,
+    val homeScore: Int? = null,
+    val awayScore: Int? = null,
+    val goalType: String? = null,
+    val text: String? = null
+) : Serializable
+
+data class PlayerResponse(
+    val id: Int,
+    val name: String,
+    val slug: String,
+    val country: CountryResponse,
+    val position: String
+) : Serializable
+
+

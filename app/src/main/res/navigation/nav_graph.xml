@@ -33,6 +33,10 @@
             android:id="@+id/action_MainListPageFragment_to_TournamentDetailsPageFragment"
             app:destination="@+id/TournamentDetailsPageFragment" />
 
+        <action
+            android:id="@+id/action_MainListPageFragment_to_SettingsFragment"
+            app:destination="@+id/SettingsFragment" />
+
     </fragment>
 
     <fragment
@@ -52,6 +56,10 @@
                 app:argType="string" />
 
         </action>
+
+        <action
+            android:id="@+id/action_MatchesFragment_to_EventDetailsPageFragment"
+            app:destination="@+id/EventDetailsPageFragment" />
     </fragment>
 
     <fragment
@@ -67,6 +75,11 @@
         android:name="com.sofascore.scoreandroidacademy.ui.fragment.EventDetailsPageFragment"
         android:label="EventDetailsPageFragment"
         tools:layout="@layout/fragment_event_details_page">
+
+        <action
+            android:id="@+id/action_EventDetailsPageFragment_to_TournamentDetailsPageFragment"
+            app:destination="@+id/TournamentDetailsPageFragment" />
+
     </fragment>
 
     <fragment
@@ -80,6 +93,11 @@
     </fragment>
 
 
-
+    <fragment
+        android:id="@+id/SettingsFragment"
+        android:name="com.sofascore.scoreandroidacademy.ui.fragment.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings">
+    </fragment>
 
 </navigation>
