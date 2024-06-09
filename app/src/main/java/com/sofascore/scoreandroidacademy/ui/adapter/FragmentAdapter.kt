@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class MainListViewPagerAdapter(
+class FragmentAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
@@ -22,5 +22,10 @@ class MainListViewPagerAdapter(
 
     override fun createFragment(position: Int): Fragment = fragments[position]
 
-    fun getPageTitle(position: Int): String = titles[position]
+    fun getPageTitle(position: Int): String {
+        if (position < 0 || position >= titles.size) {
+            throw IndexOutOfBoundsException("Position is out of bounds for titles list.")
+        }
+        return titles[position]
+    }
 }

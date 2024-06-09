@@ -32,7 +32,9 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -58,6 +60,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.paging.common.android)
+    implementation(libs.androidx.paging.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -66,9 +70,13 @@ dependencies {
     implementation (libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
-    //implementation(libs.androidx.datastore.core.android)
-    //implementation (libs.androidx.datastore.preferences.v100)
+    implementation(libs.androidx.datastore.core.android)
+    implementation(libs.androidx.datastore.preferences.v100)
 
     kapt(libs.room.compiler)
-    //ksp(libs.room.compiler) //ovo ne radi
+    //ksp(libs.room.compiler) //ovo ne radi!!!
+    implementation(libs.coil)
+    //implementation(libs.androidx.paging)
+
+
 }

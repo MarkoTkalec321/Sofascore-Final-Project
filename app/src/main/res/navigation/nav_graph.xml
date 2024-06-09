@@ -7,11 +7,97 @@
 
     <fragment
         android:id="@+id/MainListPageFragment"
-        android:name="com.sofascore.scoreandroidacademy.ui.MainListPageFragment"
+        android:name="com.sofascore.scoreandroidacademy.ui.fragment.MainListPageFragment"
         android:label="@string/main_list_page_fragment"
         tools:layout="@layout/fragment_main_list_page">
+
+        <action
+            android:id="@+id/action_TournamentDetailsPageFragment_to_MainListPageFragment"
+            app:destination="@+id/MainListPageFragment" />
+        <argument
+            android:name="date"
+            app:argType="string"
+            android:defaultValue="defaultDate" />
+        <argument
+            android:name="sport"
+            app:argType="string"
+            android:defaultValue="defaultSport" />
+
+
+
+        <action
+            android:id="@+id/action_MainListPageFragment_to_EventDetailsPageFragment"
+            app:destination="@+id/EventDetailsPageFragment" />
+
+        <action
+            android:id="@+id/action_MainListPageFragment_to_TournamentDetailsPageFragment"
+            app:destination="@+id/TournamentDetailsPageFragment" />
+
+        <action
+            android:id="@+id/action_MainListPageFragment_to_SettingsFragment"
+            app:destination="@+id/SettingsFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/TournamentDetailsPageFragment"
+        android:name="com.sofascore.scoreandroidacademy.ui.fragment.TournamentDetailsPageFragment"
+        android:label="TournamentDetailsPageFragment"
+        tools:layout="@layout/fragment_tournament_details_page">
+
+        <action
+            android:id="@+id/action_TournamentDetailsPageFragment_to_MainListPageFragment"
+            app:destination="@+id/MainListPageFragment" >
+            <argument
+                android:name="date"
+                app:argType="string" />
+            <argument
+                android:name="sport"
+                app:argType="string" />
+
+        </action>
+
+        <action
+            android:id="@+id/action_MatchesFragment_to_EventDetailsPageFragment"
+            app:destination="@+id/EventDetailsPageFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/SportFragment"
+        android:name="com.sofascore.scoreandroidacademy.ui.fragment.SportFragment"
+        android:label="SportFragment"
+        tools:layout="@layout/fragment_sport">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/EventDetailsPageFragment"
+        android:name="com.sofascore.scoreandroidacademy.ui.fragment.EventDetailsPageFragment"
+        android:label="EventDetailsPageFragment"
+        tools:layout="@layout/fragment_event_details_page">
+
+        <action
+            android:id="@+id/action_EventDetailsPageFragment_to_TournamentDetailsPageFragment"
+            app:destination="@+id/TournamentDetailsPageFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/MatchesFragment"
+        android:name="com.sofascore.scoreandroidacademy.ui.fragment.MatchesFragment"
+        android:label="MatchesFragment"
+        tools:layout="@layout/fragment_layout_matches_list" >
+        <action
+            android:id="@+id/action_MatchesFragment_to_EventDetailsPageFragment"
+            app:destination="@+id/EventDetailsPageFragment" />
     </fragment>
 
 
+    <fragment
+        android:id="@+id/SettingsFragment"
+        android:name="com.sofascore.scoreandroidacademy.ui.fragment.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings">
+    </fragment>
 
 </navigation>

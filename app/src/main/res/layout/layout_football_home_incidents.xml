@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--<import type="androidx.databinding.ViewDataBinding" />-->
+    <!--type="com.sofascore.scoreandroidacademy.databinding.LayoutFootballHomeIncidentsBindingImpl"-->
+    <data>
+        <import type="androidx.databinding.ViewDataBinding" />
+        <variable
+            name="incidentBinding"
+            type="com.sofascore.scoreandroidacademy.util.IncidentBinding" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout_minute_basketball"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+            <TextView
+                android:id="@+id/minute_basketball"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/on_surface_on_surface_lv_4"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/minute_basketball"
+                app:layout_constraintEnd_toEndOf="@id/minute_basketball"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout_logo_minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:id="@+id/logo_type"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
+            <TextView
+                android:id="@+id/minute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/logo_type"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/logo_type"
+                android:text="87'"
+                android:textSize="12sp"
+                android:textColor="@color/on_surface_on_surface_lv_2" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:background="@color/on_surface_on_surface_lv_4"
+            app:layout_constraintStart_toEndOf="@id/constraint_layout_logo_minute"
+            app:layout_constraintBottom_toBottomOf="@id/constraint_layout_logo_minute"
+            app:layout_constraintTop_toTopOf="@id/constraint_layout_logo_minute"
+            android:layout_marginStart="15dp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="28dp"
+            app:layout_constraintStart_toEndOf="@id/divider"
+            app:layout_constraintTop_toTopOf="@id/constraint_layout_logo_minute"
+            app:layout_constraintBottom_toBottomOf="@id/constraint_layout_logo_minute">
+
+            <TextView
+                android:id="@+id/home_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:paddingStart="40dp"
+                android:textColor="@color/on_surface_on_surface_lv_1"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/dash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"
+                android:textColor="@color/on_surface_on_surface_lv_1"
+                android:textSize="20sp"
+                android:layout_marginStart="4dp"
+                app:layout_constraintStart_toEndOf="@id/home_score"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/away_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:layout_marginStart="4dp"
+                android:textColor="@color/on_surface_on_surface_lv_1"
+                android:textSize="20sp"
+                app:layout_constraintStart_toEndOf="@id/dash"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout_player_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="4dp"
+            app:layout_constraintStart_toEndOf="@id/constraint_layout_score"
+            app:layout_constraintTop_toTopOf="@id/constraint_layout_logo_minute"
+            app:layout_constraintBottom_toBottomOf="@id/constraint_layout_logo_minute">
+
+            <TextView
+                android:id="@+id/player_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jonathan Livingstone"
+                android:textColor="@color/on_surface_on_surface_lv_1"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

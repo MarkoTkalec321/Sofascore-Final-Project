@@ -12,7 +12,6 @@ object Network {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    //test
     fun getInstance(): ApiService {
         synchronized(this) {
             if (INSTANCE == null) {
@@ -22,10 +21,4 @@ object Network {
         }
     }
 
-    /*fun getInstance(): ApiService {
-        if(INSTANCE == null) {
-            INSTANCE = retrofit.create(ApiService::class.java)
-        }
-        return INSTANCE!!
-    }*/
 }

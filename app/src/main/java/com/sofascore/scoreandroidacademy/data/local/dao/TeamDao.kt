@@ -13,7 +13,13 @@ interface TeamDao {
     @Query("SELECT * FROM teams")
     fun getAllTeams(): Flow<List<TeamEntity>>
 
+    @Query("SELECT * FROM teams WHERE id = :teamId")
+    suspend fun getTeamById(teamId: Int): TeamEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTeam(team: List<TeamEntity>)
 
+
+    @Query("DELETE FROM teams")
+    suspend fun deleteAllFromTeamsTable()
 }

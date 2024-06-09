@@ -20,20 +20,26 @@ fun isSameDay(cal1: Calendar, cal2: Calendar): Boolean {
 fun getDatesRange(): List<Calendar> {
     val dates = mutableListOf<Calendar>()
     val calendar = Calendar.getInstance()
+    val NUMBER_OF_DAYS = 8
 
     dates.add(calendar.clone() as Calendar)
 
-    repeat(3) {
+    repeat(NUMBER_OF_DAYS) {
         calendar.add(Calendar.DAY_OF_YEAR, -1)
         dates.add(0, calendar.clone() as Calendar)
     }
 
-    calendar.add(Calendar.DAY_OF_YEAR, 3)
+    calendar.add(Calendar.DAY_OF_YEAR, NUMBER_OF_DAYS)
 
-    repeat(3) {
+    repeat(NUMBER_OF_DAYS) {
         calendar.add(Calendar.DAY_OF_YEAR, 1)
         dates.add(calendar.clone() as Calendar)
     }
 
     return dates
+}
+
+fun getCurrentDate(): String {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    return dateFormat.format(Calendar.getInstance().time)
 }

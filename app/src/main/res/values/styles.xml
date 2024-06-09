@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="TabLayoutTextStyle" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">14sp</item>
@@ -7,4 +8,16 @@
         <item name="android:textSize">12sp</item>
         <item name="android:padding">2dp</item>
     </style>
+
+    <style name="MyTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/MyTabTextAppearance</item>
+        <item name="tabPaddingTop">4dp</item>
+        <item name="tabPaddingBottom">4dp</item>
+    </style>
+
+    <style name="MyTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
 </resources>

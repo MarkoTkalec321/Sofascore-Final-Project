@@ -12,7 +12,7 @@ import com.sofascore.scoreandroidacademy.data.remote.Result
 inline fun <ResultType, RequestType> repoResource(
     crossinline shouldFetch: (ResultType?) -> Boolean = { true },
     crossinline fetch: suspend () -> Result<RequestType>,
-    crossinline process: (RequestType) -> ResultType,
+    crossinline process: suspend (RequestType) -> ResultType,
     crossinline load: () -> Flow<ResultType>,
     crossinline save: suspend (ResultType) -> Unit
 ) = flow {
