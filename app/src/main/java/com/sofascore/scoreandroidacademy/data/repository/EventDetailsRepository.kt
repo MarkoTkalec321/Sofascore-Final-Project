@@ -63,7 +63,6 @@ class EventDetailsRepository(application: Application) {
                 incidents.forEach { incident ->
                     if (incident.text == null) {
                         currentKey?.let { key ->
-                            //Log.d("currentKey", key)
 
                             statusIncidentsMap.getOrPut(key) { mutableListOf() }.add(incident)
                         }
@@ -79,12 +78,9 @@ class EventDetailsRepository(application: Application) {
                 statusIncidentsMap.forEach{ (key, value) ->
                     statusIncidents.add(EventDetailsViewItem.EventStatusData(key))
                     value.forEach{ incident ->
-                        //Log.d("INCIDENTS123", "getIncidentsByEventId: ${incident}")
                         statusIncidents.add(EventDetailsViewItem.EventIncidentsData(incident))
                     }
                 }
-
-                //Log.d("statusIncidentsMap", "getIncidentsByEventId: ${statusIncidentsMap}")
 
                 val logString = StringBuilder()
                 statusIncidentsMap.forEach { (key, value) ->
@@ -95,7 +91,6 @@ class EventDetailsRepository(application: Application) {
                 }
                 Log.d("statusIncidentsMap", "getIncidentsByEventId:\n$logString")
 
-                //Log.d("INCIDENTS", "getIncidentsByEventId: ${statusIncidents}")
                 statusIncidents
             }
 

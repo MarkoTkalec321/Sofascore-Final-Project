@@ -36,7 +36,7 @@ class SettingsFragment: Fragment() {
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
 
-        binding.icArrowBack.setOnClickListener {
+        binding.frameLayoutArrowBack.setOnClickListener {
             findNavController().navigateUp()
         }
 

@@ -31,20 +31,8 @@ abstract class SofascoreDatabase : RoomDatabase() {
 
         fun getInstance(context: Context): SofascoreDatabase {
 
-            //synchronized(this) {
             var instance = INSTANCE
 
-            /*if (instance == null) {
-                instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    SofascoreDatabase::class.java,
-                    DATABASE_NAME
-                ).build()
-
-                INSTANCE = instance
-            }*/
-
-            //ako nesto zeznem u bazi, odkomentiram ovo i zakomentiram ovo gore i promijenim verziju za +1
 
             if(instance == null) {
                     instance = Room.databaseBuilder(
@@ -56,7 +44,6 @@ abstract class SofascoreDatabase : RoomDatabase() {
 
                     INSTANCE = instance
             }
-
             return instance
 
         }

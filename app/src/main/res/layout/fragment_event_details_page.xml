@@ -14,13 +14,21 @@
         app:layout_constraintStart_toStartOf="parent"
         >
 
-        <ImageView
-            android:id="@+id/ic_arrow_back"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_arrow_back"
-            app:tint="@color/on_surface_on_surface_lv_1"
-            />
+        <FrameLayout
+            android:id="@+id/frame_layout_arrow_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            >
+            <ImageView
+                android:id="@+id/ic_arrow_back"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="start|center"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/on_surface_on_surface_lv_1"
+
+                />
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/tournament_logo"

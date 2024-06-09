@@ -19,6 +19,7 @@ import com.sofascore.scoreandroidacademy.databinding.LayoutMatchBinding
 import com.sofascore.scoreandroidacademy.databinding.LayoutTournamentBinding
 import com.sofascore.scoreandroidacademy.util.IconConverter.Companion.loadImageFromByteArray
 import com.sofascore.scoreandroidacademy.util.TournamentViewItem
+import com.sofascore.scoreandroidacademy.util.ViewHolderFactory
 
 import com.sofascore.scoreandroidacademy.util.ViewType
 
@@ -47,108 +48,11 @@ class SportAdapter(
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    inner class MatchViewHolder(private val binding: LayoutMatchBinding) : ViewHolder(binding.root) {
-        private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault())
-        private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-
-        init {
-            dateFormat.timeZone = TimeZone.getTimeZone("UTC")
-            timeFormat.timeZone = TimeZone.getDefault()
-        }
-
-        fun bind(match: MatchEntity) {
-            resetColors()
-            itemView.setOnClickListener {
-                onMatchClick(match)
-            }
-
-            binding.startTime.text = formatStartTime(match.startDate)
-            binding.homeTeamLogo.loadImageFromByteArray(match.homeTeam.teamLogo)
-            binding.awayTeamLogo.loadImageFromByteArray(match.awayTeam.teamLogo)
-            binding.homeTeamName.text = match.homeTeam.name
-            binding.awayTeamName.text = match.awayTeam.name
-
-            if (match.status != "notstarted") {
-                binding.homeScore.visibility = View.VISIBLE
-                binding.awayScore.visibility = View.VISIBLE
-                binding.homeScore.text = match.homeScore.total.toString()
-                binding.awayScore.text = match.awayScore.total.toString()
-            } else {
-                binding.homeScore.visibility = View.INVISIBLE
-                binding.awayScore.visibility = View.INVISIBLE
-            }
-
-            when (match.status) {
-                "finished" -> handleFinishedMatch(match)
-                "notstarted" -> { binding.finishTime.text = "-" }
-                "inprogress" -> handleInProgressMatch(match)
-            }
-
-        }
-
-        private fun resetColors() {
-            val defaultColor = ContextCompat.getColor(binding.root.context, R.color.on_surface_on_surface_lv_2)
-            binding.homeTeamName.setTextColor(defaultColor)
-            binding.homeScore.setTextColor(defaultColor)
-            binding.awayTeamName.setTextColor(defaultColor)
-            binding.awayScore.setTextColor(defaultColor)
-            binding.finishTime.setTextColor(defaultColor)
-        }
-
-        private fun formatStartTime(startDate: String): String {
-            val date = dateFormat.parse(startDate) ?: return "Time Error"
-            return timeFormat.format(date)
-        }
-
-        private fun handleFinishedMatch(match: MatchEntity) {
-            binding.finishTime.text = "FT"
-            setTextColorForTeams(match.winnerCode)
-        }
-
-        private fun handleInProgressMatch(match: MatchEntity) {
-            val startDate = dateFormat.parse(match.startDate) ?: return
-            val currentDate = Date()
-            val durationInMinutes = (currentDate.time - startDate.time) / 60000  // Milliseconds to minutes
-            binding.finishTime.text = "${durationInMinutes}'"
-            setLiveMatchColors()
-        }
-
-
-        private fun setColor(homeColor: Int, awayColor: Int) {
-            binding.homeTeamName.setTextColor(ContextCompat.getColor(binding.root.context, homeColor))
-            binding.homeScore.setTextColor(ContextCompat.getColor(binding.root.context, homeColor))
-            binding.awayTeamName.setTextColor(ContextCompat.getColor(binding.root.context, awayColor))
-            binding.awayScore.setTextColor(ContextCompat.getColor(binding.root.context, awayColor))
-        }
-
-        private fun setLiveMatchColors() {
-            val liveColor = ContextCompat.getColor(binding.root.context, R.color.specific_live)
-            binding.finishTime.setTextColor(liveColor)
-            binding.homeScore.setTextColor(liveColor)
-            binding.awayScore.setTextColor(liveColor)
-        }
-
-        private fun setTextColorForTeams(winnerCode: String?) {
-            when (winnerCode) {
-                "home" -> {
-                    setColor(R.color.on_surface_on_surface_lv_1, R.color.on_surface_on_surface_lv_2)
-                }
-                "away" -> {
-                    setColor(R.color.on_surface_on_surface_lv_2, R.color.on_surface_on_surface_lv_1)
-                }
-                "draw" -> {
-                    setColor(R.color.on_surface_on_surface_lv_2, R.color.on_surface_on_surface_lv_2)
-                }
-            }
-        }
-
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ViewType.LayoutOne -> TournamentViewHolder(LayoutTournamentBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-            ViewType.LayoutTwo -> MatchViewHolder(LayoutMatchBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            //ViewType.LayoutTwo -> MatchViewHolder(LayoutMatchBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            ViewType.LayoutTwo -> ViewHolderFactory.createMatchViewHolder(parent, onMatchClick)
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -163,7 +67,9 @@ class SportAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = items[position]) {
             is TournamentViewItem.TournamentData -> (holder as TournamentViewHolder).bind(item.tournament)
-            is TournamentViewItem.MatchData -> (holder as MatchViewHolder).bind(item.match)
+            is TournamentViewItem.MatchData ->
+                (holder as MatchViewHolder).bind(item.match, false)
+                //(holder as MatchViewHolder).bind(item.match)
         }
     }
 

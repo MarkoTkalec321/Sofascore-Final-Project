@@ -59,16 +59,10 @@ class TournamentDetailsPageFragment: Fragment() {
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
 
-        binding.icArrowBack.setOnClickListener {
+        binding.frameLayoutArrowBack.setOnClickListener {
 
-            /*val tournamentDate = tournamentDetailsViewModel.currentTournament.value?.date ?: "defaultDate"
-            val tournamentSport = tournamentDetailsViewModel.currentTournament.value?.sport?.name ?: "defaultSport"
-            val action = TournamentDetailsPageFragmentDirections.actionTournamentDetailsPageFragmentToMainListPageFragment(tournamentDate, tournamentSport)
-            findNavController().navigate(action)*/
-
-            //findNavController().navigate(R.id.action_TournamentDetailsPageFragment_to_MainListPageFragment(date = "a"))
             findNavController().navigateUp()
-            //findNavController().popBackStack()
+
         }
 
         val tabs = listOf("Matches", "Standings")
