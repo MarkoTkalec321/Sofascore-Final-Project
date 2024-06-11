@@ -24,6 +24,7 @@ class StandingsAdapter : RecyclerView.Adapter<StandingsAdapter.ViewHolder>() {
                 played.text = row.played.toString()
                 wins.text = row.wins.toString()
                 losses.text = row.losses.toString()
+                draws.text = row.draws.toString()
 
                 firstRow?.let {
                     difference.text = (it.scoresFor - row.scoresAgainst).toString()
@@ -32,7 +33,7 @@ class StandingsAdapter : RecyclerView.Adapter<StandingsAdapter.ViewHolder>() {
                 }
 
                 val pct = (row.wins + 0.5 * row.draws) / row.played
-                percentage.text = String.format("%.3f", pct)
+                percentage.text = String.format("%.2f", pct)
             }
         }
     }

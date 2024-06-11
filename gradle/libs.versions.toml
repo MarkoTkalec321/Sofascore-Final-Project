@@ -19,6 +19,8 @@ room = "2.6.1"
 paging = "3.3.0"
 pagingCommonAndroid = "3.3.0"
 pagingRuntimeKtx = "3.3.0"
+datastoreCoreAndroid = "1.1.1"
+datastorePreferences = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +43,9 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-paging = { group = "androidx.paging", name = "paging-runtime-ktx", version = "paging"}
 androidx-paging-common-android = { group = "androidx.paging", name = "paging-common-android", version.ref = "pagingCommonAndroid" }
 androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastoreCoreAndroid" }
+androidx-datastore-preferences-v100 = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

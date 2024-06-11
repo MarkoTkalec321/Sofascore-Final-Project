@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,10 +18,9 @@ import com.sofascore.scoreandroidacademy.data.local.entity.TournamentEntity
 import com.sofascore.scoreandroidacademy.databinding.FragmentSportBinding
 import com.sofascore.scoreandroidacademy.data.remote.Result
 import com.sofascore.scoreandroidacademy.ui.adapter.SportAdapter
-import com.sofascore.scoreandroidacademy.ui.viewmodel.SharedViewModel
+import com.sofascore.scoreandroidacademy.ui.viewmodel.MainListPageViewModel
 import com.sofascore.scoreandroidacademy.ui.viewmodel.SportViewModel
 import com.sofascore.scoreandroidacademy.util.TournamentViewItem
-import com.sofascore.scoreandroidacademy.util.ViewType
 import com.sofascore.scoreandroidacademy.util.getCurrentDate
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -31,7 +31,7 @@ import java.util.TreeMap
 class SportFragment: Fragment() {
     private var _binding: FragmentSportBinding? = null
     private val binding get() = _binding!!
-    private val sharedViewModel by activityViewModels<SharedViewModel>()
+    private val mainListPageViewModel by activityViewModels<MainListPageViewModel>()
     private val sportViewModel by viewModels<SportViewModel>()
 
     private var lastFetchedSport: String? = null
@@ -53,8 +53,14 @@ class SportFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigateUp()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
 
-        sharedViewModel.selectedSportDate.observe(viewLifecycleOwner) { event ->
+        mainListPageViewModel.selectedSportDate.observe(viewLifecycleOwner) { event ->
             event.peekContent().let { (originalSport, date) ->
 
                 var sport = originalSport
@@ -73,10 +79,10 @@ class SportFragment: Fragment() {
         val adapter =
             SportAdapter(
                 onTournamentClick = {
-                    findNavController().navigate(R.id.action_MainListPageFragment_to_TournamentDetailsPageFragment, Bundle().apply {putSerializable("tournament", it)})
+                    findNavController().navigate(R.id.action_MainListPageFragment_to_TournamentDetailsPageFragment, Bundle().apply { putSerializable("tournament", it) })
                 },
                 onMatchClick = {
-                    findNavController().navigate(R.id.action_MainListPageFragment_to_EventDetailsPageFragment, Bundle().apply { putSerializable("match", it) })
+                    findNavController().navigate(R.id.action_MainListPageFragment_to_EventDetailsPageFragment, Bundle().apply { putSerializable("eventId", it.id) })
                 })
 
         val layoutManager = LinearLayoutManager(context)
@@ -159,7 +165,7 @@ class SportFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        sharedViewModel.selectedSportDate.removeObservers(viewLifecycleOwner)
+        mainListPageViewModel.selectedSportDate.removeObservers(viewLifecycleOwner)
         sportViewModel.matchList.removeObservers(viewLifecycleOwner)
         _binding = null
     }

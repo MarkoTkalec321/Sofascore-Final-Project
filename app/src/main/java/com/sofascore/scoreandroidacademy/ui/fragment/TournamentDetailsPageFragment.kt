@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -51,16 +52,17 @@ class TournamentDetailsPageFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigateUp()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
 
-        binding.icArrowBack.setOnClickListener {
+        binding.frameLayoutArrowBack.setOnClickListener {
 
-            val tournamentDate = tournamentDetailsViewModel.currentTournament.value?.date ?: "defaultDate"
-            val tournamentSport = tournamentDetailsViewModel.currentTournament.value?.sport?.name ?: "defaultSport"
-            val action = TournamentDetailsPageFragmentDirections.actionTournamentDetailsPageFragmentToMainListPageFragment(tournamentDate, tournamentSport)
-            findNavController().navigate(action)
-            //findNavController().navigate(R.id.action_TournamentDetailsPageFragment_to_MainListPageFragment(date = "a"))
-            //findNavController().navigateUp()
-            //findNavController().popBackStack()
+            findNavController().navigateUp()
+
         }
 
         val tabs = listOf("Matches", "Standings")

@@ -1,6 +1,8 @@
 package com.sofascore.scoreandroidacademy.ui.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sofascore.scoreandroidacademy.R
@@ -33,18 +35,29 @@ class MatchViewHolder(private val binding: LayoutMatchBinding,
 
         binding.startTime.text = formatStartTime(match.startDate, insideMatchesAdapter)
 
-        when (match.status) {
-            "finished" -> handleFinishedMatch(match)
-            "notstarted" -> { binding.finishTime.text = "-"}
-            "inprogress" -> handleInProgressMatch(match)
-        }
-
         binding.homeTeamLogo.loadImageFromByteArray(match.homeTeam.teamLogo)
         binding.awayTeamLogo.loadImageFromByteArray(match.awayTeam.teamLogo)
         binding.homeTeamName.text = match.homeTeam.name
-        binding.homeScore.text = match.homeScore.total?.toString() ?: ""
         binding.awayTeamName.text = match.awayTeam.name
-        binding.awayScore.text = match.awayScore.total?.toString() ?: ""
+
+        if (match.status != "notstarted") {
+            binding.homeScore.visibility = View.VISIBLE
+            binding.awayScore.visibility = View.VISIBLE
+            binding.homeScore.text = match.homeScore.total.toString()
+            binding.awayScore.text = match.awayScore.total.toString()
+        } else {
+            binding.homeScore.visibility = View.INVISIBLE
+            binding.awayScore.visibility = View.INVISIBLE
+        }
+
+        Log.d("MatchDetails", "Home Score: ${match.homeScore}")
+        Log.d("MatchDetails", "Away Score: ${match.awayScore}")
+        when (match.status) {
+            "finished" -> handleFinishedMatch(match)
+            "notstarted" -> { binding.finishTime.text = "-" }
+            "inprogress" -> handleInProgressMatch(match)
+        }
+
     }
 
     private fun resetColors() {

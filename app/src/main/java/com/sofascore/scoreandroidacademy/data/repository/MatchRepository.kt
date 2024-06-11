@@ -3,6 +3,7 @@ package com.sofascore.scoreandroidacademy.data.repository
 import android.app.Application
 import android.util.Log
 import androidx.paging.PagingSource
+import com.google.gson.JsonSyntaxException
 import com.sofascore.scoreandroidacademy.data.local.SofascoreDatabase
 import com.sofascore.scoreandroidacademy.data.local.entity.MatchEntity
 import com.sofascore.scoreandroidacademy.data.local.entity.TeamEntity
@@ -49,7 +50,7 @@ class MatchRepository(application: Application) {
                     when (data) {
                         is Result.Success -> {
 
-                            val matchList = data.data.map { match ->
+                            data.data.map { match ->
 
                                 val deferredTeams = mutableListOf<Deferred<TeamEntity>>()
                                 val deferredTournaments = mutableListOf<Deferred<TournamentEntity>>()
@@ -123,68 +124,14 @@ class MatchRepository(application: Application) {
                                     )
                                 })
 
-
                                 val teams = deferredTeams.awaitAll().distinctBy { it.id }
                                 val tournaments = deferredTournaments.awaitAll().distinctBy { it.id }
 
                                 launch { teamDao.insertTeam(teams) }
                                 launch { tournamentDao.insertTournament(tournaments) }
 
-                                MatchEntity(
-                                    id = match.id,
-                                    slug = match.slug,
-                                    homeTeam = TeamEntity(
-                                        id = match.homeTeam.id,
-                                        name = match.homeTeam.name,
-                                        country = CountryResponse(
-                                            id = match.homeTeam.country.id,
-                                            name = match.homeTeam.country.name
-                                        ),
-                                        teamLogo = homeTeamLogoDeferred.await()
-                                    ),
-                                    awayTeam = TeamEntity(
-                                        id = match.awayTeam.id,
-                                        name = match.awayTeam.name,
-                                        country = CountryResponse(
-                                            id = match.awayTeam.country.id,
-                                            name = match.awayTeam.country.name
-                                        ),
-                                        teamLogo = awayTeamLogoDeferred.await()
-                                    ),
-                                    tournament = TournamentEntity(
-                                        id = match.tournament.id,
-                                        name = match.tournament.name,
-                                        slug = match.tournament.slug,
-                                        sport = SportResponse(
-                                            id = match.tournament.sport.id,
-                                            name = match.tournament.sport.name,
-                                            slug = match.tournament.sport.slug
-                                        ),
-                                        country = CountryResponse(
-                                            id = match.tournament.country.id,
-                                            name = match.tournament.country.name
-                                        ),
-                                        tournamentLogo = tournamentLogoDeferred.await(),
-                                        date = date
-                                    ),
-                                    status = match.status,
-                                    startDate = match.startDate,
-                                    homeScore = ScoreResponse(
-                                        total = match.homeScore.total,
-                                        period2 = match.homeScore.period2
-                                    ),
-                                    awayScore = ScoreResponse(
-                                        total = match.awayScore.total,
-                                        period2 = match.awayScore.period2
-                                    ),
-                                    winnerCode = match.winnerCode,
-                                    round = match.round,
-                                    date = date,
-                                    sportName = sportName
-                                )
+                                createMatchEntity(match, homeTeamLogoDeferred.await(), awayTeamLogoDeferred.await(), tournamentLogoDeferred.await(), date, sportName)
                             }
-                            //Log.d("matchList", matchList.toString())
-                            matchList
                         }
 
                         is Result.Error -> {
@@ -212,77 +159,22 @@ class MatchRepository(application: Application) {
                         val homeLogo = getTeamLogoSafe(match.homeTeam.id)
                         val awayLogo = getTeamLogoSafe(match.awayTeam.id)
 
-                        MatchEntity(
-                            id = match.id,
-                            slug = match.slug,
-                            homeTeam = TeamEntity(
-                                id = match.homeTeam.id,
-                                name = match.homeTeam.name,
-                                country = CountryResponse(
-                                    id = match.homeTeam.country.id,
-                                    name = match.homeTeam.country.name
-                                ),
-                                teamLogo = homeLogo
-                            ),
-                            awayTeam = TeamEntity(
-                                id = match.awayTeam.id,
-                                name = match.awayTeam.name,
-                                country = CountryResponse(
-                                    id = match.awayTeam.country.id,
-                                    name = match.awayTeam.country.name
-                                ),
-                                teamLogo = awayLogo
-                            ),
-                            tournament = TournamentEntity(
-                                id = match.tournament.id,
-                                name = match.tournament.name,
-                                slug = match.tournament.slug,
-                                sport = SportResponse(
-                                    id = match.tournament.sport.id,
-                                    name = match.tournament.sport.name,
-                                    slug = match.tournament.sport.slug
-                                ),
-                                country = CountryResponse(
-                                    id = match.tournament.country.id,
-                                    name = match.tournament.country.name
-                                ),
-                                tournamentLogo = null,
-                                date = null
-                            ),
-                            status = match.status,
-                            startDate = match.startDate,
-                            homeScore = ScoreResponse(
-                                total = match.homeScore.total,
-                                period2 = match.homeScore.period2
-                            ),
-                            awayScore = ScoreResponse(
-                                total = match.awayScore.total,
-                                period2 = match.awayScore.period2
-                            ),
-                            winnerCode = match.winnerCode,
-                            round = match.round,
-                            date = null,
-                            sportName = null
-                        )
+                        createMatchEntity(match, homeLogo, awayLogo)
                     }
 
                     val roundMatchesMap = TreeMap<Int, MutableList<MatchEntity>>()
                     val roundMatches = ArrayList<RoundMatchesViewItem>()
 
-                    //Log.d("matchrepo", matchResponses.toString())
                     matchResponses.map { matchEntity ->
                         roundMatchesMap.getOrPut(matchEntity.round) { mutableListOf() }.add(matchEntity)
                     }
 
-                    //Log.d("matchrepo", roundMatchesMap.toString())
                     roundMatchesMap.forEach { (key, value) ->
                         roundMatches.add(RoundMatchesViewItem.RoundData(key))
                         value.forEach { matchEntity ->
                             roundMatches.add(RoundMatchesViewItem.MatchData(matchEntity))
                         }
                     }
-
-                    //Log.d("matchrepo", roundMatches.toString())
 
                     PagingSource.LoadResult.Page(
                         data = roundMatches,
@@ -297,14 +189,74 @@ class MatchRepository(application: Application) {
         }
     }
 
-    private suspend fun getTeamLogoSafe(teamId: Int): ByteArray? {
-        val response = safeResponse { api.getTeamLogo(teamId) }
-        when(response) {
-            is Result.Success -> return response.data.toByteArray()
-            is Result.Error -> {
-                Log.e("API Error", "Failed to fetch home team logo: ${response.error.message}")
-                return null
+
+
+    suspend fun getEventDetailsByEventId(eventId: Int): MatchEntity {
+        val result = safeResponse { api.getEventDetailsByEventId(eventId) }
+        return when (result) {
+            is Result.Success -> {
+                val match = result.data
+                run {
+                    val homeLogo = getTeamLogoSafe(match.homeTeam.id)
+                    val awayLogo = getTeamLogoSafe(match.awayTeam.id)
+                    val tournamentLogo = getTeamLogoSafe(match.tournament.id)
+
+                    MatchEntity(
+                        id = match.id,
+                        slug = match.slug,
+                        homeTeam = TeamEntity(
+                            id = match.homeTeam.id,
+                            name = match.homeTeam.name,
+                            country = CountryResponse(
+                                id = match.homeTeam.country.id,
+                                name = match.homeTeam.country.name
+                            ),
+                            teamLogo = homeLogo
+                        ),
+                        awayTeam = TeamEntity(
+                            id = match.awayTeam.id,
+                            name = match.awayTeam.name,
+                            country = CountryResponse(
+                                id = match.awayTeam.country.id,
+                                name = match.awayTeam.country.name
+                            ),
+                            teamLogo = awayLogo
+                        ),
+                        tournament = TournamentEntity(
+                            id = match.tournament.id,
+                            name = match.tournament.name,
+                            slug = match.tournament.slug,
+                            sport = SportResponse(
+                                id = match.tournament.sport.id,
+                                name = match.tournament.sport.name,
+                                slug = match.tournament.sport.slug
+                            ),
+                            country = CountryResponse(
+                                id = match.tournament.country.id,
+                                name = match.tournament.country.name
+                            ),
+                            tournamentLogo = tournamentLogo,
+                            date = null
+                        ),
+                        status = match.status,
+                        startDate = match.startDate,
+                        homeScore = ScoreResponse(
+                            total = match.homeScore.total,
+                            period2 = match.homeScore.period2
+                        ),
+                        awayScore = ScoreResponse(
+                            total = match.awayScore.total,
+                            period2 = match.awayScore.period2
+                        ),
+                        winnerCode = match.winnerCode,
+                        round = match.round,
+                        date = null,
+                        sportName = null
+                    )
+                }
             }
+
+            is Result.Error -> throw Exception("Error processing matches: ${result.error.message}")
         }
     }
 
@@ -360,6 +312,71 @@ class MatchRepository(application: Application) {
         }
     }
 
+    private fun createMatchEntity(match: MatchResponse, homeLogo: ByteArray? = null, awayLogo: ByteArray? = null,
+                                  tournamentLogo: ByteArray? = null, date: String? = null, sportName: String? = null)
+            : MatchEntity {
+        return MatchEntity(
+            id = match.id,
+            slug = match.slug,
+            homeTeam = TeamEntity(
+                id = match.homeTeam.id,
+                name = match.homeTeam.name,
+                country = CountryResponse(
+                    id = match.homeTeam.country.id,
+                    name = match.homeTeam.country.name
+                ),
+                teamLogo = homeLogo
+            ),
+            awayTeam = TeamEntity(
+                id = match.awayTeam.id,
+                name = match.awayTeam.name,
+                country = CountryResponse(
+                    id = match.awayTeam.country.id,
+                    name = match.awayTeam.country.name
+                ),
+                teamLogo = awayLogo
+            ),
+            tournament = TournamentEntity(
+                id = match.tournament.id,
+                name = match.tournament.name,
+                slug = match.tournament.slug,
+                sport = SportResponse(
+                    id = match.tournament.sport.id,
+                    name = match.tournament.sport.name,
+                    slug = match.tournament.sport.slug
+                ),
+                country = CountryResponse(
+                    id = match.tournament.country.id,
+                    name = match.tournament.country.name
+                ),
+                tournamentLogo = tournamentLogo,
+                date = date
+            ),
+            status = match.status,
+            startDate = match.startDate,
+            homeScore = ScoreResponse(
+                total = match.homeScore.total,
+                period2 = match.homeScore.period2
+            ),
+            awayScore = ScoreResponse(
+                total = match.awayScore.total,
+                period2 = match.awayScore.period2
+            ),
+            winnerCode = match.winnerCode,
+            round = match.round,
+            date = date,
+            sportName = sportName
+        )
 
-
+    }
+    private suspend fun getTeamLogoSafe(teamId: Int): ByteArray? {
+        val response = safeResponse { api.getTeamLogo(teamId) }
+        when(response) {
+            is Result.Success -> return response.data.toByteArray()
+            is Result.Error -> {
+                Log.e("API Error", "Failed to fetch home team logo: ${response.error.message}")
+                return null
+            }
+        }
+    }
 }

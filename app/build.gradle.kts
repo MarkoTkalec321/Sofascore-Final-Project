@@ -32,7 +32,9 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -68,8 +70,8 @@ dependencies {
     implementation (libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
-    //implementation(libs.androidx.datastore.core.android)
-    //implementation (libs.androidx.datastore.preferences.v100)
+    implementation(libs.androidx.datastore.core.android)
+    implementation(libs.androidx.datastore.preferences.v100)
 
     kapt(libs.room.compiler)
     //ksp(libs.room.compiler) //ovo ne radi!!!

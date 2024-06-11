@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -59,8 +60,7 @@ class MatchesFragment: Fragment() {
 
         val matchesAdapter =
             MatchesAdapter(onMatchClick = {
-            findNavController().navigate(R.id.action_MatchesFragment_to_EventDetailsPageFragment, Bundle().apply { putSerializable("match", it) }) },
-                logMatchDetails = { matchEntity -> Log.d("MatchLog", "Match ID: ${matchEntity.id}, Match Info: ${matchEntity.tournament}") }
+            findNavController().navigate(R.id.action_MatchesFragment_to_EventDetailsPageFragment, Bundle().apply { putSerializable("eventId", it.id) }) }
             )
 
         with(binding.matchesRecyclerView) {
@@ -78,6 +78,16 @@ class MatchesFragment: Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().navigateUp()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
     }
 
     override fun onDestroyView() {
