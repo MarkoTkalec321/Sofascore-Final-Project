@@ -3,6 +3,12 @@ Mini sofascore android app made for Sofascore Android Academy 2023
 
 ### Project Images
 
+<div style="display: flex; gap: 10px;">
+    <img src="github_images/1.png" alt="Image 1" height="200" />
+    <img src="github_images/2.png" alt="Image 2" height="200" />
+    <img src="github_images/3.png" alt="Image 3" height="200" />
+</div>
+
 ![](github_images/1.png)
 
 ![](github_images/2.png)
