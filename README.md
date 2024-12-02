@@ -22,7 +22,7 @@ Mini sofascore android app made for Sofascore Android Academy 2023
 - Shows details for matches and standings by rounds
 
 ### API usage
-- Fetching data from Sofascore backend server [Sofascore](https://academy-backend.sofascore.dev/_"Sofascore")
+- Fetching data from Sofascore backend server [Sofascore](https://academy-backend.sofascore.dev/ "Sofascore")
 
 ## How to run this project
 - Run the project using Android Studio
