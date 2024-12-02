@@ -7,9 +7,9 @@ Mini sofascore android app made for Sofascore Android Academy 2023
     <img src="github_images/1.png" alt="Image 1" height="800" width="33%" />
     <img src="github_images/2.png" alt="Image 2" height="800" width="33%"/>
     <img src="github_images/3.png" alt="Image 3" height="800" width="33%"/>
-    <img src="github_images/1.png" alt="Image 4" height="800" width="33%" />
-    <img src="github_images/2.png" alt="Image 5" height="800" width="33%"/>
-    <img src="github_images/3.png" alt="Image 6" height="800" width="33%"/>
+    <img src="github_images/4.png" alt="Image 4" height="800" width="33%" />
+    <img src="github_images/5.png" alt="Image 5" height="800" width="33%"/>
+    <img src="github_images/6.png" alt="Image 6" height="800" width="33%"/>
 </div>
 
 ![](github_images/1.png)
